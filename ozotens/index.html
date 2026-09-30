@@ -80,7 +80,17 @@ section { padding-block: clamp(56px, 8vw, 104px); border-top: 1px solid var(--li
 .frame small { font: 400 12px/1.4 var(--f-mono); color: var(--ink-soft); position: relative; }
 
 /* hero */
-.hero { padding-block: clamp(32px, 5vw, 64px) clamp(48px, 6vw, 80px); border-top: 0; }
+.hero { padding-block: clamp(16px, 2vw, 24px) clamp(48px, 6vw, 80px); border-top: 0; }
+.stage { position: relative; border-radius: 24px; overflow: hidden; background: #1b2830; color: #eef3f5; padding: clamp(24px, 5vw, 64px); min-height: min(720px, 86vh); display: flex; align-items: flex-end; }
+.stage::before { content: ""; position: absolute; inset: 0; background: repeating-linear-gradient(135deg, rgba(255,255,255,.035) 0 16px, transparent 16px 32px), linear-gradient(180deg, rgba(10,18,23,.15) 30%, rgba(10,18,23,.85)); }
+.stage .rec { position: absolute; top: 22px; left: 26px; font: 600 12px/1.4 var(--f-mono); letter-spacing: .12em; color: #ff8a6e; display: flex; gap: 8px; align-items: center; max-width: calc(100% - 52px); }
+.stage .rec::before { content: ""; flex: none; width: 8px; height: 8px; border-radius: 50%; background: #ff8a6e; }
+.stage .hero-grid { position: relative; width: 100%; align-items: end; }
+.stage .eyebrow { color: #9fbcff; }
+.stage .lead { color: #c3d0d6; }
+.stage .hero-text em { color: #fff; }
+.stage .btn-ghost { color: #fff; border-color: rgba(255,255,255,.7); }
+.stage .btn-main { background: #fff; border-color: #fff; color: #13212b; }
 .hero-grid { display: grid; grid-template-columns: 1.1fr .9fr; gap: clamp(24px, 4vw, 56px); align-items: center; }
 .hero-text { display: grid; gap: 22px; min-width: 0; }
 .hero-text em { font-style: normal; color: var(--ink); font-weight: 500; }
@@ -88,7 +98,7 @@ section { padding-block: clamp(56px, 8vw, 104px); border-top: 1px solid var(--li
 .hero .frame { min-height: 150px; margin-top: 8px; }
 
 /* экран прибора */
-.device { background: var(--surface); border: 1px solid var(--line); border-radius: 28px; padding: 18px; display: grid; gap: 16px; min-width: 0; }
+.device { color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 28px; padding: 18px; display: grid; gap: 16px; min-width: 0; }
 .lcd { background: var(--lcd-bg); border-radius: 16px; padding: 14px 16px 10px; color: var(--lcd-ink); font-family: var(--f-mono); }
 .lcd-top { display: flex; justify-content: space-between; font-size: 12px; letter-spacing: .1em; opacity: .75; }
 .lcd canvas { display: block; width: 100%; height: 130px; }
@@ -140,6 +150,11 @@ input[type=range] { width: 100%; accent-color: var(--ozone); min-height: 28px; }
 .spec strong { font: 600 clamp(34px, 4vw, 48px)/1 var(--f-display); font-variant-numeric: tabular-nums; }
 .spec strong small { font-size: .45em; font-family: var(--f-body); font-weight: 500; margin-left: 6px; color: var(--ink-soft); }
 .spec p { color: var(--ink-soft); font-size: 17px; }
+.spec-table { margin-top: 32px; border-top: 2px solid var(--ink); overflow-x: auto; }
+.spec-table table { width: 100%; border-collapse: collapse; font-size: 16px; }
+.spec-table th, .spec-table td { text-align: left; padding: 14px 12px 14px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+.spec-table th { font-weight: 500; color: var(--ink-soft); width: 40%; }
+.spec-table td { font-family: var(--f-mono); font-size: 15px; font-variant-numeric: tabular-nums; }
 .warn { margin-top: 24px; font: 500 15px/1.5 var(--f-mono); color: var(--ink-soft); border-left: 3px solid var(--heat); padding-left: 14px; }
 
 /* документы */
@@ -173,6 +188,8 @@ blockquote footer { font: 500 14px/1.4 var(--f-mono); color: var(--ink-soft); }
 .kit li::before { content: "+"; font-family: var(--f-mono); color: var(--lcd-ink); }
 .kit li:first-child::before { content: "·"; }
 .kit .note { font-size: 15px; line-height: 1.5; color: #b8c6cd; }
+.kit .kit-shot { border-radius: 14px; min-height: 150px; background: repeating-linear-gradient(135deg, #182730 0 14px, #13212a 14px 28px); display: flex; align-items: flex-end; padding: 14px; font: 500 13px/1.4 var(--f-mono); color: #9fb0b9; }
+.kit .btn { justify-content: center; background: #fff; border-color: #fff; color: #13212b; opacity: .55; cursor: not-allowed; }
 .kit .draft { font: 400 12px/1.4 var(--f-mono); color: #8fa2ab; border-top: 1px solid #26363e; padding-top: 12px; }
 
 /* противопоказания */
@@ -216,6 +233,8 @@ blockquote footer { font: 500 14px/1.4 var(--f-mono); color: var(--ink-soft); }
 <main id="top">
   <section class="hero">
     <div class="wrap">
+      <div class="stage">
+      <span class="rec">КАДР 1 · ВИДЕО-ЛУП 5-7 С · мужчина выходит из машины после дороги, рука упирается в поясницу</span>
       <div class="hero-grid">
         <div class="hero-text">
           <p class="eyebrow">Поясница · шея · суставы</p>
@@ -224,11 +243,6 @@ blockquote footer { font: 500 14px/1.4 var(--f-mono); color: var(--ink-soft); }
           <div class="cta-row">
             <a class="btn btn-ghost" href="#how">Как это работает</a>
             <a class="btn btn-main" href="#quiz">Подобрать под мою боль</a>
-          </div>
-          <div class="frame">
-            <span class="rec">КАДР 1 · ЛУП 5-7 С</span>
-            <b>Мужчина выходит из машины после дороги, рука упирается в поясницу</b>
-            <small>полноэкранное видео-луп, идёт фоном первого экрана</small>
           </div>
         </div>
 
@@ -252,6 +266,7 @@ blockquote footer { font: 500 14px/1.4 var(--f-mono); color: var(--ink-soft); }
           </div>
           <p class="device-note">Диапазоны прибора: 2-100 Гц, 100-300 мкс, сила 0-40. Покрутите - так выглядит импульс на экране.</p>
         </div>
+      </div>
       </div>
 
       <div class="facts">
@@ -340,6 +355,18 @@ blockquote footer { font: 500 14px/1.4 var(--f-mono); color: var(--ink-soft); }
         <div class="spec"><strong>2<small>канала</small></strong><p>Можно работать с двумя зонами сразу.</p></div>
         <div class="spec"><strong>22<small>программы</small></strong><p>Режимы TENS, EMS и массаж. Аккумулятор, зарядка от USB 5 В.</p></div>
       </div>
+      <div class="spec-table">
+        <table>
+          <tr><th>Вес</th><td>85 г</td></tr>
+          <tr><th>Размер</th><td>142 × 50 × 21 мм</td></tr>
+          <tr><th>Каналы</th><td>2</td></tr>
+          <tr><th>Программы</th><td>22 · TENS, EMS, массаж</td></tr>
+          <tr><th>Частота</th><td>2-100 Гц</td></tr>
+          <tr><th>Длительность импульса</th><td>100-300 мкс, бифазный</td></tr>
+          <tr><th>Сила</th><td>0-40</td></tr>
+          <tr><th>Питание</th><td>аккумулятор, зарядка от USB 5 В</td></tr>
+        </table>
+      </div>
       <p class="warn">Не пользуйтесь прибором за рулём. В припаркованной машине - можно.</p>
     </div>
   </section>
@@ -394,12 +421,14 @@ blockquote footer { font: 500 14px/1.4 var(--f-mono); color: var(--ink-soft); }
         </form>
         <aside class="kit" aria-live="polite">
           <p class="eyebrow">Ваш комплект</p>
+          <div class="kit-shot">ФОТО КОМПЛЕКТА · прибор, крем, электрод выбранной зоны</div>
           <ul>
             <li>Прибор ОЗОТЭНС</li>
             <li>Крем OZOTENS 30%</li>
             <li id="kitElectrode">Электрод «СПИНА»</li>
           </ul>
           <p class="note" id="kitNote">Перед покупкой обсудите метод со своим врачом - особенно если есть грыжа или протрузия.</p>
+          <button class="btn" type="button" disabled>Оставить заявку</button>
           <p class="draft">Черновик: форма заявки подключится позже.</p>
         </aside>
       </div>
