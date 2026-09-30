@@ -1,0 +1,606 @@
+<meta charset="utf-8">
+<title>ОЗОТЭНС</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;600&family=Onest:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+/* Раскладка: тёмная сцена с одним источником света; сверху тепло боли, к низу страница остывает в озон. Система - design/design-system.md */
+:root {
+  --night: #07090c;
+  --panel: #0f141a;
+  --line: rgba(255,255,255,.1);
+  --ink: #eef2f4;
+  --ink-soft: #a3afb7;
+  --pain: #ff5a36;
+  --ember: #ffb04a;
+  --ozone: #3d7bff;
+  --glow: #8db8ff;
+  --f-display: "Unbounded", "Arial Black", sans-serif;
+  --f-body: "Onest", "Segoe UI", system-ui, sans-serif;
+  --f-mono: "JetBrains Mono", ui-monospace, Consolas, monospace;
+  --wrap: 1180px;
+  --ease: cubic-bezier(.2,.8,.2,1);
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { background: var(--night); }
+body { margin: 0; background: var(--night); color: var(--ink); font: 400 18px/1.6 var(--f-body); -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+#bg { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; display: block; pointer-events: none; }
+.page { position: relative; z-index: 1; }
+.wrap { max-width: var(--wrap); margin: 0 auto; padding-inline: clamp(16px, 4vw, 40px); }
+h1, h2, h3 { font-family: var(--f-display); font-weight: 600; margin: 0; text-wrap: balance; letter-spacing: -.015em; }
+h1 { font-size: clamp(34px, 6vw, 80px); line-height: 1.02; }
+h2 { font-size: clamp(28px, 4.2vw, 54px); line-height: 1.08; }
+h3 { font-size: 19px; line-height: 1.3; font-weight: 500; }
+p { margin: 0; }
+.eyebrow { font: 600 13px/1 var(--f-mono); letter-spacing: .16em; text-transform: uppercase; color: var(--glow); }
+.lead { color: var(--ink-soft); font-size: clamp(18px, 1.7vw, 21px); max-width: 58ch; }
+:focus-visible { outline: 3px solid var(--glow); outline-offset: 3px; border-radius: 8px; }
+
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 56px; padding: 0 28px; border-radius: 999px; font: 600 16px/1 var(--f-body); text-decoration: none; cursor: pointer; transition: box-shadow .3s var(--ease), transform .3s var(--ease), border-color .3s; border: 1.5px solid transparent; }
+.btn-main { background: var(--ozone); color: #fff; }
+.btn-main:hover { box-shadow: 0 0 0 6px rgba(61,123,255,.18), 0 10px 40px rgba(61,123,255,.45); transform: translateY(-2px); }
+.btn-ghost { color: var(--ink); border-color: rgba(255,255,255,.35); background: rgba(7,9,12,.3); backdrop-filter: blur(6px); }
+.btn-ghost:hover { border-color: var(--ink); }
+
+section { padding-block: clamp(80px, 11vw, 160px); position: relative; }
+.sec-head { display: grid; gap: 18px; margin-bottom: clamp(36px, 5vw, 64px); max-width: 880px; }
+
+/* шапка */
+.top { position: fixed; top: 0; left: 0; right: 0; z-index: 30; padding-top: env(safe-area-inset-top, 0px); transition: background .4s; }
+.top.solid { background: rgba(7,9,12,.72); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); }
+.top .wrap { display: flex; align-items: center; justify-content: space-between; min-height: 70px; gap: 16px; }
+.brand { font: 600 18px/1 var(--f-display); letter-spacing: .08em; text-decoration: none; color: var(--ink); display: flex; align-items: center; gap: 10px; }
+.brand svg { width: 28px; height: 16px; stroke: var(--glow); fill: none; stroke-width: 2; }
+.top .btn { min-height: 44px; padding: 0 20px; font-size: 14px; }
+
+/* варианты для суда */
+.variants { position: fixed; left: 50%; bottom: calc(16px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); z-index: 40; display: flex; gap: 4px; padding: 4px; border-radius: 999px; background: rgba(15,20,26,.9); border: 1px solid var(--line); backdrop-filter: blur(10px); font: 500 13px/1 var(--f-mono); }
+.variants a { color: var(--ink-soft); text-decoration: none; padding: 10px 14px; border-radius: 999px; white-space: nowrap; }
+.variants a[aria-current="true"] { background: var(--ink); color: var(--night); }
+
+/* ---------- первый экран ---------- */
+.hero { min-height: 100svh; display: flex; align-items: flex-end; padding-block: 120px clamp(40px, 6vw, 72px); overflow: hidden; }
+.hero-art { position: absolute; inset: 0; z-index: -1; }
+.hero-art canvas { width: 100%; height: 100%; display: block; }
+.hero::after { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(90deg, rgba(7,9,12,.9) 0%, rgba(7,9,12,.55) 45%, rgba(7,9,12,0) 75%), linear-gradient(0deg, var(--night) 0%, transparent 30%); pointer-events: none; }
+.hero-in { display: grid; gap: 26px; max-width: 760px; }
+.hero .lead em { font-style: normal; color: var(--ink); }
+.cta-row { display: flex; flex-wrap: wrap; gap: 12px; }
+.facts { display: flex; flex-wrap: wrap; gap: 10px 28px; margin-top: 10px; padding-top: 22px; border-top: 1px solid var(--line); }
+.facts div { display: grid; gap: 2px; }
+.facts b { font: 600 15px/1.3 var(--f-display); }
+.facts span { color: var(--ink-soft); font-size: 15px; }
+.readout { font: 500 13px/1 var(--f-mono); color: var(--glow); display: flex; gap: 18px; flex-wrap: wrap; letter-spacing: .06em; }
+.readout span::before { content: ""; display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--glow); margin-right: 8px; vertical-align: middle; box-shadow: 0 0 10px var(--glow); }
+.kadr-tag { position: absolute; top: 90px; right: clamp(16px, 4vw, 40px); font: 500 12px/1.4 var(--f-mono); color: var(--ink-soft); max-width: 320px; text-align: right; }
+.kadr-tag b { color: var(--pain); font-weight: 600; }
+
+/* ---------- день ---------- */
+.day { display: grid; gap: 0; border-top: 1px solid var(--line); }
+.hour { display: grid; grid-template-columns: 180px 1fr; gap: 24px; align-items: baseline; padding: clamp(22px, 3vw, 36px) 0; border-bottom: 1px solid var(--line); }
+.hour time { font: 600 clamp(28px, 4vw, 52px)/1 var(--f-mono); color: var(--ember); opacity: calc(.45 + var(--i) * .18); font-variant-numeric: tabular-nums; }
+.hour p { font: 400 clamp(20px, 2.4vw, 30px)/1.35 var(--f-body); max-width: 30ch; }
+
+/* ---------- таблетки ---------- */
+.cmp { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 24px; overflow: hidden; }
+.cmp div { background: rgba(15,20,26,.82); padding: clamp(22px, 3vw, 34px); display: grid; gap: 12px; align-content: start; }
+.cmp h3 { font-family: var(--f-display); font-size: 18px; }
+.cmp p { color: var(--ink-soft); font-size: 17px; }
+.bridge { margin-top: clamp(36px, 5vw, 60px); font: 500 clamp(22px, 2.8vw, 34px)/1.35 var(--f-body); max-width: 30em; }
+.bridge b { color: var(--glow); font-weight: 600; }
+
+/* ---------- кадры ---------- */
+.frame { position: relative; border-radius: 18px; overflow: hidden; min-height: 220px; display: flex; flex-direction: column; justify-content: flex-end; gap: 6px; padding: 20px; isolation: isolate; border: 1px solid var(--line); }
+.frame::before { content: ""; position: absolute; inset: -40%; z-index: -1; background: conic-gradient(from var(--a, 0deg), #10161d, #1b2733, #131a22, #231a17, #10161d); animation: turn 18s linear infinite; filter: blur(30px); }
+.frame::after { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(0deg, rgba(7,9,12,.85), rgba(7,9,12,.1) 60%); }
+@property --a { syntax: "<angle>"; inherits: false; initial-value: 0deg; }
+@keyframes turn { to { --a: 360deg; } }
+.frame .rec { position: absolute; top: 16px; left: 18px; font: 600 12px/1 var(--f-mono); letter-spacing: .12em; color: var(--pain); display: flex; gap: 8px; align-items: center; }
+.frame .rec::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--pain); animation: blink 1.6s steps(2) infinite; }
+@keyframes blink { 50% { opacity: .2; } }
+.frame b { font-weight: 500; font-size: 16px; }
+
+/* ---------- метод ---------- */
+.how-art { opacity: .55; -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 55%); mask-image: linear-gradient(90deg, transparent 0%, #000 55%); }
+#how { overflow: clip; }
+.method { display: grid; grid-template-columns: .9fr 1.1fr; gap: clamp(28px, 5vw, 72px); align-items: start; }
+.method .sec-head { position: sticky; top: 110px; margin: 0; }
+.steps { list-style: none; margin: 0; padding: 0; display: grid; gap: clamp(28px, 4vw, 48px); counter-reset: s; }
+.steps li { display: grid; gap: 14px; counter-increment: s; }
+.steps li::before { content: "0" counter(s); font: 600 clamp(48px, 7vw, 88px)/.9 var(--f-display); color: transparent; -webkit-text-stroke: 1.5px var(--glow); }
+.steps p { color: var(--ink-soft); }
+.steps .frame { min-height: 260px; }
+
+/* ---------- карман ---------- */
+.giant { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-bottom: clamp(36px, 5vw, 60px); }
+.giant div { display: grid; gap: 8px; }
+.giant strong { font: 600 clamp(64px, 10vw, 150px)/.85 var(--f-display); letter-spacing: -.04em; background: linear-gradient(180deg, var(--ink), var(--glow)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.giant small { font: 500 16px/1.2 var(--f-mono); color: var(--glow); }
+.giant p { color: var(--ink-soft); font-size: 17px; max-width: 26ch; }
+.pocket { display: grid; grid-template-columns: 1.1fr 1fr; gap: 14px; }
+.pocket .big { min-height: 440px; }
+.scenes { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.scenes .frame { min-height: 213px; }
+.spec { margin-top: clamp(36px, 5vw, 56px); border-top: 1px solid var(--line); overflow-x: auto; }
+.spec table { width: 100%; border-collapse: collapse; }
+.spec th, .spec td { text-align: left; padding: 16px 16px 16px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+.spec th { font-weight: 400; color: var(--ink-soft); width: 38%; }
+.spec td { font: 500 16px/1.4 var(--f-mono); font-variant-numeric: tabular-nums; }
+.warn { margin-top: 24px; font: 500 15px/1.5 var(--f-mono); color: var(--ink-soft); border-left: 3px solid var(--pain); padding-left: 14px; }
+
+/* ---------- документы ---------- */
+.docs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.doc { background: rgba(15,20,26,.82); border: 1px solid var(--line); border-radius: 22px; padding: 24px; display: grid; gap: 14px; align-content: start; min-height: 190px; transition: border-color .3s; }
+.doc:hover { border-color: rgba(141,184,255,.45); }
+.doc code { font: 600 clamp(20px, 2vw, 26px)/1 var(--f-mono); color: var(--glow); }
+.doc p { color: var(--ink-soft); font-size: 16px; }
+.doc.todo { border-style: dashed; background: transparent; }
+.doc.todo code { color: var(--pain); }
+
+/* ---------- основатель ---------- */
+.founder { display: grid; grid-template-columns: .85fr 1.15fr; gap: clamp(28px, 5vw, 72px); align-items: center; }
+.founder .frame { min-height: 460px; }
+blockquote { margin: 0; display: grid; gap: 24px; }
+blockquote p { font: 400 clamp(22px, 2.6vw, 34px)/1.4 var(--f-body); }
+blockquote p::before { content: "«"; color: var(--glow); }
+blockquote p::after { content: "»"; color: var(--glow); }
+blockquote footer { font: 500 14px/1.4 var(--f-mono); color: var(--ink-soft); }
+
+/* ---------- подбор ---------- */
+.quiz { display: grid; grid-template-columns: 1.15fr .85fr; gap: clamp(24px, 4vw, 48px); align-items: start; }
+.q { border: 0; margin: 0 0 30px; padding: 0; min-width: 0; }
+.q legend { font: 500 20px/1.3 var(--f-display); margin-bottom: 16px; padding: 0; display: flex; gap: 12px; align-items: baseline; }
+.q legend span { font: 600 13px/1 var(--f-mono); color: var(--glow); }
+.chips { display: flex; flex-wrap: wrap; gap: 10px; }
+.chip input { position: absolute; opacity: 0; pointer-events: none; }
+.chip span { display: inline-flex; align-items: center; min-height: 50px; padding: 0 20px; border-radius: 999px; border: 1.5px solid rgba(255,255,255,.2); cursor: pointer; font-size: 17px; transition: border-color .2s, background .2s, box-shadow .2s; }
+.chip span:hover { border-color: var(--ink); }
+.chip input:checked + span { background: var(--ozone); border-color: var(--ozone); box-shadow: 0 0 24px rgba(61,123,255,.45); }
+.chip input:focus-visible + span { outline: 3px solid var(--glow); outline-offset: 2px; }
+.kit { position: sticky; top: 100px; border-radius: 26px; padding: 28px; display: grid; gap: 18px; background: radial-gradient(120% 80% at 80% 0%, rgba(61,123,255,.35), transparent 60%), var(--panel); border: 1px solid rgba(141,184,255,.3); }
+.kit .frame { min-height: 170px; }
+.kit ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 10px; }
+.kit li { display: flex; gap: 12px; font-size: 19px; }
+.kit li::before { content: "+"; font-family: var(--f-mono); color: var(--glow); }
+.kit li:first-child::before { content: "·"; }
+.kit .note { font-size: 15px; color: var(--ink-soft); }
+.kit .btn[disabled] { opacity: .5; cursor: not-allowed; }
+.kit .draft { font: 400 12px/1.4 var(--f-mono); color: var(--ink-soft); border-top: 1px solid var(--line); padding-top: 12px; }
+
+/* ---------- противопоказания ---------- */
+.contra { columns: 2; column-gap: 48px; margin: 0; padding: 0; list-style: none; }
+.contra li { break-inside: avoid; padding: 16px 0; border-bottom: 1px solid var(--line); display: flex; gap: 16px; font-size: 19px; }
+.contra li::before { content: ""; flex: none; width: 10px; height: 10px; margin-top: .55em; border-radius: 50%; background: var(--pain); box-shadow: 0 0 12px var(--pain); }
+
+/* ---------- финал ---------- */
+.final { min-height: 90svh; display: flex; align-items: center; overflow: hidden; }
+.final .hero-art { opacity: .9; }
+.final h2 { font-size: clamp(36px, 6.4vw, 96px); max-width: 14ch; }
+.final .cta-row { margin-top: 36px; }
+.legal { padding-block: 32px 96px; border-top: 1px solid var(--line); }
+.legal .wrap { display: grid; gap: 10px; }
+.legal p:first-child { font: 600 clamp(15px, 1.6vw, 19px)/1.4 var(--f-body); text-transform: uppercase; letter-spacing: .04em; }
+.legal p:last-child { font: 400 13px/1.4 var(--f-mono); color: var(--ink-soft); }
+
+@media (max-width: 900px) {
+  .method, .founder, .quiz, .pocket { grid-template-columns: 1fr; }
+  .method .sec-head { position: static; }
+  .cmp, .docs, .giant { grid-template-columns: 1fr 1fr; }
+  .kit { position: static; }
+  .kadr-tag { display: none; }
+}
+@media (max-width: 600px) {
+  body { font-size: 17px; }
+  .cmp, .docs, .giant, .scenes { grid-template-columns: 1fr; }
+  .hour { grid-template-columns: 1fr; gap: 8px; }
+  .contra { columns: 1; }
+  .top .btn { display: none; }
+  .hero::after { background: linear-gradient(0deg, var(--night) 10%, rgba(7,9,12,.55) 60%, rgba(7,9,12,.2)); }
+  .pocket .big { min-height: 300px; }
+  .variants a { padding: 10px 10px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+</style>
+
+<canvas id="bg" aria-hidden="true"></canvas>
+
+<header class="top" id="top">
+  <div class="wrap">
+    <a class="brand" href="#hero"><svg viewBox="0 0 28 16" aria-hidden="true"><path d="M0 8h7V2h5v12h5V8h11"/></svg>ОЗОТЭНС</a>
+    <a class="btn btn-main" href="#quiz">Подобрать комплект</a>
+  </div>
+</header>
+
+<nav class="variants" aria-label="Варианты первого экрана для суда">
+  <a href="#a" data-v="a">A · Тепло</a>
+  <a href="#b" data-v="b">B · Импульс</a>
+  <a href="#c" data-v="c">C · Материя</a>
+</nav>
+
+<main class="page">
+  <section class="hero" id="hero">
+    <div class="hero-art"><canvas id="heroArt" aria-hidden="true"></canvas></div>
+    <p class="kadr-tag" id="kadrTag"><b>● КАДР 1</b> · видео-луп 5-7 с · мужчина выходит из машины после дороги, рука упирается в поясницу. Пока на его месте живой фон.</p>
+    <div class="wrap">
+      <div class="hero-in">
+        <p class="eyebrow">Поясница · шея · суставы</p>
+        <h1>Когда спина решает, сколько ты сегодня проживёшь</h1>
+        <p class="lead">Встал - тянет. Посидел - зажало. Наклонился - стрельнуло в ногу. <em>Привыкнуть к этому нельзя, можно только терпеть. Или не терпеть.</em></p>
+        <div class="cta-row">
+          <a class="btn btn-main" href="#quiz">Подобрать под мою боль</a>
+          <a class="btn btn-ghost" href="#how">Как это работает</a>
+        </div>
+        <div class="facts">
+          <div><b>Импульс + крем</b><span>Два способа воздействия за один сеанс</span></div>
+          <div><b>85 грамм</b><span>Помещается в карман, работает от аккумулятора</span></div>
+          <div><b>Патент РФ</b><span>Метод разработан озонотерапевтами</span></div>
+        </div>
+        <p class="readout"><span>2-100 Гц</span><span>100-300 мкс</span><span>бифазный импульс</span></p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="eyebrow">Обычный день</p>
+        <h2>Больная спина забирает не спину. Она забирает день</h2>
+      </div>
+      <div class="day">
+        <div class="hour" style="--i:0"><time>07:00</time><p>Сползаю с кровати боком, как учили.</p></div>
+        <div class="hour" style="--i:1"><time>13:00</time><p>Третий час за ноутом. Поясница горит.</p></div>
+        <div class="hour" style="--i:2"><time>19:00</time><p>Сын просит поиграть. Говорю: потом.</p></div>
+        <div class="hour" style="--i:3"><time>23:00</time><p>Ищу позу, в которой не ноет. Не нахожу.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="eyebrow">Знакомый набор</p>
+        <h2>Таблетки откладывают боль. А спине нужно двигаться</h2>
+      </div>
+      <div class="cmp">
+        <div><h3>Нимесулид и другие обезболивающие</h3><p>Глушат боль, но работают на весь организм - желудок, печень. Поэтому курс ограничен по времени: загляните в инструкцию.</p></div>
+        <div><h3>Миорелаксанты</h3><p>Снимают спазм, но от части из них клонит в сон. За руль и в работу - так себе вариант.</p></div>
+        <div><h3>Мази</h3><p>Остаются на коже. До места, где болит, доходит мало.</p></div>
+      </div>
+      <p class="bridge">Боль возвращается, пока спина не начнёт двигаться. Но двигаться, когда стреляет, невозможно. <b>ОЗОТЭНС работает местно, там, где болит</b>, - чтобы вы могли вернуться к движению.</p>
+    </div>
+  </section>
+
+  <section id="how">
+    <div class="hero-art how-art"><canvas id="howArt" aria-hidden="true"></canvas></div>
+    <div class="wrap method">
+      <div class="sec-head">
+        <p class="eyebrow">Метод</p>
+        <h2>Импульс и озоновый крем работают вместе</h2>
+        <p class="lead">Слабые электрические импульсы (ТЭНС) приглушают болевой сигнал и расслабляют зажатые мышцы. Одновременно они помогают озонсодержащему крему пройти глубже, к зоне воспаления и отёка.</p>
+      </div>
+      <ol class="steps">
+        <li><h3>Крем на электрод</h3><p>Тонкий слой OZOTENS 30% - он же проводит ток.</p>
+          <div class="frame"><span class="rec">КАДР 2A</span><b>Крем выдавливают на фигурный электрод</b></div></li>
+        <li><h3>Электрод на спину</h3><p>Форма под зону: спина, шея, колено, плечо, стопа.</p>
+          <div class="frame"><span class="rec">КАДР 2B</span><b>Электрод «Спина» ложится на поясницу</b></div></li>
+        <li><h3>Включить и настроить</h3><p>Сила от 0 до 40 - выбираете ту, что комфортна.</p>
+          <div class="frame"><span class="rec">КАДР 2C</span><b>Палец на кнопке прибора, на экране уровень</b></div></li>
+      </ol>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="eyebrow">Всегда с собой</p>
+        <h2>Помещается в карман. Работает там, где болит</h2>
+        <p class="lead">Физиокабинет без записи и дороги: сеанс тогда, когда прихватило, а не когда есть свободное окно у врача.</p>
+      </div>
+      <div class="giant">
+        <div><strong>85</strong><small>грамм</small><p>Легче смартфона. 142 × 50 × 21 мм.</p></div>
+        <div><strong>2</strong><small>канала</small><p>Можно работать с двумя зонами сразу.</p></div>
+        <div><strong>22</strong><small>программы</small><p>Режимы TENS, EMS и массаж. Аккумулятор, зарядка от USB 5 В.</p></div>
+      </div>
+      <div class="pocket">
+        <div class="frame big"><span class="rec">КАДР 3 · ПРЕДМЕТКА</span><b>Прибор выглядывает из кармана джинсов</b></div>
+        <div class="scenes">
+          <div class="frame"><span class="rec">3A</span><b>Офисное кресло, обед</b></div>
+          <div class="frame"><span class="rec">3B</span><b>Диван, вечер, сериал</b></div>
+          <div class="frame"><span class="rec">3C</span><b>Дача после грядок</b></div>
+          <div class="frame"><span class="rec">3D</span><b>Номер в командировке</b></div>
+        </div>
+      </div>
+      <div class="spec">
+        <table>
+          <tr><th>Вес</th><td>85 г</td></tr>
+          <tr><th>Размер</th><td>142 × 50 × 21 мм</td></tr>
+          <tr><th>Каналы</th><td>2</td></tr>
+          <tr><th>Программы</th><td>22 · TENS, EMS, массаж</td></tr>
+          <tr><th>Частота</th><td>2-100 Гц</td></tr>
+          <tr><th>Длительность импульса</th><td>100-300 мкс, бифазный</td></tr>
+          <tr><th>Сила</th><td>0-40</td></tr>
+          <tr><th>Питание</th><td>аккумулятор, зарядка от USB 5 В</td></tr>
+        </table>
+      </div>
+      <p class="warn">Не пользуйтесь прибором за рулём. В припаркованной машине - можно.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="eyebrow">Документы</p>
+        <h2>На чём держится метод</h2>
+      </div>
+      <div class="docs">
+        <div class="doc"><code>RU 2714457</code><p>Патент РФ на метод ОЗОТЭНС-терапии</p></div>
+        <div class="doc"><code>ПИМУ</code><p>Разработан в Ассоциации российских озонотерапевтов, исследован в Приволжском исследовательском медицинском университете</p></div>
+        <div class="doc"><code>2020</code><p>Учебное пособие для врачей «ОЗОТЭНС-терапия дорсалгий и артралгий» и 5 научных статей</p></div>
+        <div class="doc"><code>ЕАЭС</code><p>Декларации соответствия на прибор и крем</p></div>
+        <div class="doc todo"><code>РУ ?</code><p>Регистрационное удостоверение Росздравнадзора - вставить номер, если есть</p></div>
+        <div class="doc todo"><code>Сканы</code><p>Сюда - кликабельные сканы всех документов</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap founder">
+      <div class="frame"><span class="rec">КАДР 4 · ВИДЕО 30-60 С</span><b>Саша в кадре, настоящий, с прибором в руке</b></div>
+      <blockquote>
+        <p>У меня две грыжи в пояснице. Я видеограф: часы с камерой на ногах, потом ночь за монтажом. Я знаю, как это, когда поясница решает за тебя. Поэтому и взялся рассказать про этот метод.</p>
+        <footer>Александр Щербаков · основатель проекта</footer>
+      </blockquote>
+    </div>
+  </section>
+
+  <section id="quiz">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="eyebrow">3 вопроса</p>
+        <h2>Подберём комплект под вашу зону</h2>
+      </div>
+      <div class="quiz">
+        <form id="quizForm">
+          <fieldset class="q"><legend><span>01</span>Где беспокоит сильнее всего?</legend><div class="chips" id="zones"></div></fieldset>
+          <fieldset class="q"><legend><span>02</span>Как давно?</legend><div class="chips" id="since"></div></fieldset>
+          <fieldset class="q"><legend><span>03</span>Что уже пробовали?</legend><div class="chips" id="tried"></div></fieldset>
+        </form>
+        <aside class="kit" aria-live="polite">
+          <p class="eyebrow">Ваш комплект</p>
+          <div class="frame"><span class="rec">ФОТО</span><b>Прибор, крем и электрод выбранной зоны</b></div>
+          <ul>
+            <li>Прибор ОЗОТЭНС</li>
+            <li>Крем OZOTENS 30%</li>
+            <li id="kitElectrode">Электрод «СПИНА»</li>
+          </ul>
+          <p class="note">Перед покупкой обсудите метод со своим врачом - особенно если есть грыжа или протрузия.</p>
+          <button class="btn btn-main" type="button" disabled>Оставить заявку</button>
+          <p class="draft">Черновик: форма заявки подключится позже.</p>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="eyebrow">Честно и сразу</p>
+        <h2>Кому метод не подходит</h2>
+      </div>
+      <ul class="contra">
+        <li>Кардиостимулятор</li>
+        <li>Высокое давление</li>
+        <li>Беременность</li>
+        <li>Онкология, новообразования</li>
+        <li>Кровотечения и болезни крови</li>
+        <li>Температура выше 38 °C, острые гнойные воспаления</li>
+        <li>Острые внутрисуставные травмы</li>
+        <li>Раны и кожные заболевания в зоне воздействия</li>
+        <li>Непереносимость импульсного тока</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="final">
+    <div class="hero-art"><canvas id="finalArt" aria-hidden="true"></canvas></div>
+    <div class="wrap">
+      <h2>Спина не должна решать, как ты живёшь.</h2>
+      <div class="cta-row"><a class="btn btn-main" href="#quiz">Подобрать комплект</a></div>
+    </div>
+  </section>
+
+  <footer class="legal">
+    <div class="wrap">
+      <p>Имеются противопоказания. Необходимо проконсультироваться со специалистом</p>
+      <p>ЧЕРНОВИК · тексты и цены требуют проверки юристом по рекламе и производителем</p>
+    </div>
+  </footer>
+</main>
+
+<script>
+(() => {
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+  let scrollK = 0; // 0 - верх (тепло), 1 - низ (озон)
+  const onScroll = () => {
+    const max = document.documentElement.scrollHeight - innerHeight;
+    scrollK = max > 0 ? clamp(scrollY / max, 0, 1) : 0;
+    document.getElementById('top').classList.toggle('solid', scrollY > 40);
+  };
+  addEventListener('scroll', onScroll, { passive: true }); onScroll();
+
+  // ---------- WebGL: живой свет (фон страницы, вариант A) и крем (вариант C) ----------
+  const VERT = 'attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}';
+  const FRAG = `precision mediump float;
+uniform vec2 r;uniform float t;uniform float cool;uniform float mode;uniform float gain;uniform vec2 focus;
+float h(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
+float n(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);
+ return mix(mix(h(i),h(i+vec2(1,0)),f.x),mix(h(i+vec2(0,1)),h(i+vec2(1,1)),f.x),f.y);}
+float fbm(vec2 p){float v=0.,a=.5;for(int i=0;i<5;i++){v+=a*n(p);p*=2.02;a*=.5;}return v;}
+void main(){
+ vec2 uv=gl_FragCoord.xy/r;vec2 q=(gl_FragCoord.xy-.5*r)/r.y;
+ vec3 warm=vec3(1.,.42,.16),ember=vec3(1.,.69,.29),oz=vec3(.24,.48,1.),gl=vec3(.55,.72,1.);
+ vec3 col;
+ if(mode<.5){
+  vec2 f=(focus-.5)*vec2(r.x/r.y,1.);
+  vec2 w=q+.25*vec2(fbm(q*1.6+t*.05),fbm(q*1.6-t*.04));
+  float d=length(w-f);
+  float glow=exp(-d*d*3.2)*.95+exp(-d*1.8)*.25;
+  float fl=fbm(q*2.4+vec2(0.,t*.07));
+  vec3 hot=mix(warm,ember,fl);vec3 cold=mix(oz,gl,fl);
+  col=mix(hot,cold,cool)*glow*(.55+.6*fl);
+  col+=mix(vec3(.05,.02,.01),vec3(.01,.02,.05),cool)*fbm(q*3.+t*.02);
+ } else {
+  vec2 p=q*2.2;
+  vec2 a=vec2(fbm(p+t*.03),fbm(p+vec2(5.2,1.3)-t*.025));
+  vec2 b=vec2(fbm(p+3.*a+vec2(1.7,9.2)),fbm(p+3.*a+vec2(8.3,2.8)+t*.02));
+  float v=fbm(p+3.5*b);
+  float e=.004;float gx=fbm(p+3.5*b+vec2(e,0.))-v;float gy=fbm(p+3.5*b+vec2(0.,e))-v;
+  vec3 nrm=normalize(vec3(-gx*60.,-gy*60.,1.));
+  float spec=pow(max(dot(nrm,normalize(vec3(-.5,.6,.9))),0.),24.);
+  col=vec3(.9,.92,.95)*smoothstep(.35,.85,v)*.55+spec*vec3(.9,.95,1.)*.9;
+  col*=smoothstep(1.25,.15,length(q-vec2(.35,0.)));
+  col=mix(col,col*gl*1.3,.25);
+ }
+ col*=gain;
+ col+=(h(gl_FragCoord.xy+t)-.5)*.035;
+ gl_FragColor=vec4(col,1.);
+}`;
+  function makeGL(canvas, opts) {
+    const gl = canvas.getContext('webgl', { antialias: false, premultipliedAlpha: false });
+    if (!gl) return null;
+    const sh = (type, src) => { const s = gl.createShader(type); gl.shaderSource(s, src); gl.compileShader(s); return s; };
+    const pr = gl.createProgram();
+    gl.attachShader(pr, sh(gl.VERTEX_SHADER, VERT)); gl.attachShader(pr, sh(gl.FRAGMENT_SHADER, FRAG)); gl.linkProgram(pr);
+    if (!gl.getProgramParameter(pr, gl.LINK_STATUS)) return null;
+    gl.useProgram(pr);
+    const buf = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1,1,-1,-1,1,1,1]), gl.STATIC_DRAW);
+    const loc = gl.getAttribLocation(pr, 'p'); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+    const U = n => gl.getUniformLocation(pr, n);
+    const u = { r: U('r'), t: U('t'), cool: U('cool'), mode: U('mode'), gain: U('gain'), focus: U('focus') };
+    return {
+      opts,
+      draw(time) {
+        const scale = opts.scale || .5;
+        const w = Math.max(1, Math.round(canvas.clientWidth * scale)), h = Math.max(1, Math.round(canvas.clientHeight * scale));
+        if (canvas.width !== w || canvas.height !== h) { canvas.width = w; canvas.height = h; gl.viewport(0, 0, w, h); }
+        gl.uniform2f(u.r, w, h); gl.uniform1f(u.t, time);
+        gl.uniform1f(u.cool, opts.cool()); gl.uniform1f(u.mode, opts.mode()); gl.uniform1f(u.gain, opts.gain());
+        const f = opts.focus(); gl.uniform2f(u.focus, f[0], f[1]);
+        gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+      }
+    };
+  }
+
+  // ---------- Canvas: позвоночник и импульс (вариант B) ----------
+  function makeSpine(canvas, calm) {
+    const ctx = canvas.getContext('2d');
+    const rings = []; let last = 0;
+    return {
+      draw(time) {
+        const dpr = Math.min(devicePixelRatio || 1, 2);
+        const W = canvas.clientWidth, H = canvas.clientHeight;
+        if (canvas.width !== Math.round(W * dpr)) { canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr); }
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H);
+        const cx = W < 700 ? W * .8 : W * .8, top = H * .2, bot = H * .9, n = 24;
+        const cool = calm ? 1 : Math.min(1, scrollK * 1.4);
+        const warmC = [255, 90, 54], ozC = [61, 123, 255], glC = [141, 184, 255];
+        const mix = (a, b, k) => a.map((v, i) => Math.round(v + (b[i] - v) * k));
+        const painIdx = 19;
+        let pain = null;
+        for (let i = 0; i < n; i++) {
+          const k = i / (n - 1);
+          const y = top + (bot - top) * k;
+          const x = cx + Math.sin(k * Math.PI * 2.1 + .4) * W * .018 + Math.sin(time * .6 + i * .3) * 1.2;
+          const s = (W < 700 ? 7 : 12) + k * (W < 700 ? 6 : 12);
+          const near = Math.max(0, 1 - Math.abs(i - painIdx) / 4);
+          const c = mix(glC, warmC, near * (1 - cool * .85));
+          ctx.fillStyle = `rgba(${c},${.28 + near * .4})`;
+          ctx.strokeStyle = `rgba(${c},${.8 + near * .2})`; ctx.shadowColor = `rgba(${c},.8)`; ctx.shadowBlur = 8;
+          ctx.lineWidth = 1.2;
+          ctx.beginPath(); ctx.roundRect(x - s, y - s * .38, s * 2, s * .76, s * .3); ctx.fill(); ctx.stroke();
+          ctx.beginPath(); ctx.moveTo(x - s * 1.5, y); ctx.lineTo(x - s * 1.05, y); ctx.moveTo(x + s * 1.05, y); ctx.lineTo(x + s * 1.5, y); ctx.stroke();
+          ctx.shadowBlur = 0;
+          if (i === painIdx) pain = [x, y];
+        }
+        // точка боли
+        const beat = .6 + .4 * Math.pow(Math.max(0, Math.sin(time * 2.4)), 6);
+        const pc = mix(warmC, ozC, cool);
+        const g = ctx.createRadialGradient(pain[0], pain[1], 0, pain[0], pain[1], 140);
+        g.addColorStop(0, `rgba(${pc},${.75 * beat})`); g.addColorStop(1, `rgba(${pc},0)`);
+        ctx.fillStyle = g; ctx.beginPath(); ctx.arc(pain[0], pain[1], 140, 0, Math.PI * 2); ctx.fill();
+        // кольца импульса
+        if (time - last > (reduce ? 1e9 : .9)) { rings.push(time); last = time; }
+        while (rings.length && time - rings[0] > 4.5) rings.shift();
+        for (const t0 of rings) {
+          const a = (time - t0) / 4.5, rad = 20 + a * Math.max(W, H) * .55;
+          ctx.strokeStyle = `rgba(${glC},${(1 - a) * .55})`; ctx.lineWidth = 1.5;
+          ctx.beginPath(); ctx.ellipse(pain[0], pain[1], rad, rad * .82, 0, 0, Math.PI * 2); ctx.stroke();
+        }
+      }
+    };
+  }
+
+  // ---------- сборка ----------
+  let variant = 'b';
+  const bg = makeGL(document.getElementById('bg'), {
+    scale: .35, cool: () => scrollK, mode: () => 0,
+    gain: () => { const inHero = scrollY < innerHeight * .7; return inHero ? (variant === 'b' ? .12 : .25) : .3; },
+    focus: () => [.78, .35 - scrollK * .1]
+  });
+  let heroCanvasRef = document.getElementById('heroArt');
+  let heroGL = null, heroSpine = null;
+  const finalSpine = makeSpine(document.getElementById('finalArt'), true);
+  const howCanvas = document.getElementById('howArt');
+  const howGL = makeGL(howCanvas, { scale: .4, cool: () => 1, mode: () => 1, gain: () => .8, focus: () => [.5, .5] });
+
+  function setVariant(v) {
+    variant = ['a', 'b', 'c'].includes(v) ? v : 'b';
+    document.querySelectorAll('.variants a').forEach(a => a.setAttribute('aria-current', a.dataset.v === variant));
+    const fresh = heroCanvasRef.cloneNode(); heroCanvasRef.replaceWith(fresh);
+    if (variant === 'b') { heroSpine = makeSpine(fresh, false); heroGL = null; }
+    else { heroSpine = null; heroGL = makeGL(fresh, { scale: .5, cool: () => 0, mode: () => variant === 'c' ? 1 : 0, gain: () => variant === 'c' ? 1.1 : 1.25, focus: () => [.72, .45] }); }
+    heroCanvasRef = fresh;
+    if (reduce) frame(8);
+  }
+  const hash = () => (location.hash || '').replace('#', '');
+  addEventListener('hashchange', () => { const h = hash(); if (['a','b','c'].includes(h)) { setVariant(h); window.scrollTo(0, 0); } });
+  setVariant(['a','b','c'].includes(hash()) ? hash() : 'b');
+
+  const vis = el => { const r = el.getBoundingClientRect(); return r.bottom > 0 && r.top < innerHeight; };
+  function frame(t) {
+    if (bg) bg.draw(t);
+    if (vis(heroCanvasRef)) { heroGL && heroGL.draw(t); heroSpine && heroSpine.draw(t); }
+    const fc = document.getElementById('finalArt'); if (vis(fc)) finalSpine.draw(t);
+    if (howGL && vis(howCanvas)) howGL.draw(t);
+  }
+  if (reduce) { frame(8); addEventListener('resize', () => frame(8)); addEventListener('scroll', () => frame(8), { passive: true }); }
+  else { const loop = ms => { frame(ms / 1000); requestAnimationFrame(loop); }; requestAnimationFrame(loop); }
+
+  // ---------- подбор комплекта ----------
+  // Формы электродов из текста владельца: спина, шея, колено, плечо, стопа.
+  const zones = [['back','Поясница / спина','СПИНА'],['neck','Шея','ШЕЯ'],['shoulder','Плечо','ПЛЕЧО'],['knee','Колено','КОЛЕНО'],['leg','Бедро / голень',null],['hand','Кисть',null],['foot','Стопа / пятка','СТОПА']];
+  const since = ['Пара недель', 'Несколько месяцев', 'Годами'];
+  const tried = ['Мази', 'Таблетки', 'Массаж', 'Физиотерапию'];
+  function chips(id, items, type, name) {
+    const box = document.getElementById(id);
+    items.forEach((it, i) => {
+      const [val, label] = Array.isArray(it) ? it : [it, it];
+      const l = document.createElement('label'); l.className = 'chip';
+      l.innerHTML = `<input type="${type}" name="${name}" id="${name}-${i}" value="${val}"${type === 'radio' && i === 0 ? ' checked' : ''}><span>${label}</span>`;
+      box.appendChild(l);
+    });
+  }
+  chips('zones', zones, 'radio', 'zone'); chips('since', since, 'radio', 'since'); chips('tried', tried, 'checkbox', 'tried');
+  const form = document.getElementById('quizForm');
+  form.addEventListener('submit', e => e.preventDefault());
+  form.addEventListener('change', () => {
+    const z = zones.find(x => x[0] === form.zone.value);
+    document.getElementById('kitElectrode').textContent = z[2] ? `Электрод «${z[2]}»` : 'Электрод под эту зону - уточним при заказе';
+  });
+})();
+</script>
