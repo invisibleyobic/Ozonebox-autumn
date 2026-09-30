@@ -254,7 +254,8 @@ function mountScrollWorld(container, config) {
   // OZONEBOX: плавный скролл - колесо даёт ступеньки по ~100 px, сцена догоняет их мягко
   let ySm = window.scrollY || 0;
   function read() {
-    const y = ySm; window.__swY = ySm;
+    // OZONEBOX: после трека идёт футер страницы - за концом трека сцена стоит на финальном кадре
+    const y = Math.min(ySm, totalW * vh); window.__swY = ySm;
     const fade = CROSSFADE * vh;
     let ci = 0;
     for (let i = 0; i < NSEG; i++) if (y >= SEGMENTS[i].start) ci = i;
