@@ -1,0 +1,6 @@
+# Сырые 4K-исходники и mp4 - тяжёлые, лежат в аккаунте Higgsfield (ID в HANDOFF.md)
+assets/src/
+assets/vid/
+*.tmp
+.env
+.env.*
