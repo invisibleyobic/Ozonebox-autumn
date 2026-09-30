@@ -15,6 +15,10 @@
   --ember: #ffb04a;
   --ozone: #3d7bff;
   --glow: #8db8ff;
+  --day: #eef3f9;        /* светлая шапка: перламутр */
+  --day-ink: #0d1a2b;
+  --day-soft: #4a5a6b;
+  --ozone-deep: #2456d8;
   --f-display: "Unbounded", "Arial Black", sans-serif;
   --f-body: "Onest", "Segoe UI", system-ui, sans-serif;
   --f-mono: "JetBrains Mono", ui-monospace, Consolas, monospace;
@@ -53,27 +57,34 @@ section { padding-block: clamp(80px, 11vw, 160px); position: relative; }
 .brand { font: 600 18px/1 var(--f-display); letter-spacing: .08em; text-decoration: none; color: var(--ink); display: flex; align-items: center; gap: 10px; }
 .brand svg { width: 28px; height: 16px; stroke: var(--glow); fill: none; stroke-width: 2; }
 .top .btn { min-height: 44px; padding: 0 20px; font-size: 14px; }
+.top:not(.solid) .brand { color: var(--day-ink); }
+.top:not(.solid) .brand svg { stroke: var(--ozone-deep); }
 
-/* варианты для суда */
-.variants { position: fixed; left: 50%; bottom: calc(16px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); z-index: 40; display: flex; gap: 4px; padding: 4px; border-radius: 999px; background: rgba(15,20,26,.9); border: 1px solid var(--line); backdrop-filter: blur(10px); font: 500 13px/1 var(--f-mono); }
-.variants a { color: var(--ink-soft); text-decoration: none; padding: 10px 14px; border-radius: 999px; white-space: nowrap; }
-.variants a[aria-current="true"] { background: var(--ink); color: var(--night); }
 
 /* ---------- первый экран ---------- */
-.hero { min-height: 100svh; display: flex; align-items: flex-end; padding-block: 120px clamp(40px, 6vw, 72px); overflow: hidden; }
+.hero { min-height: 100svh; display: flex; align-items: center; padding-block: 120px clamp(80px, 9vw, 140px); overflow: hidden; background: var(--day); color: var(--day-ink); }
+.hero .hero-art { z-index: 0; }
+.hero > .wrap { position: relative; z-index: 2; width: 100%; }
+#heroMol { position: absolute; inset: 0; z-index: 1; width: 100%; height: 100%; display: block; }
 .hero-art { position: absolute; inset: 0; z-index: -1; }
 .hero-art canvas { width: 100%; height: 100%; display: block; }
-.hero::after { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(90deg, rgba(7,9,12,.9) 0%, rgba(7,9,12,.55) 45%, rgba(7,9,12,0) 75%), linear-gradient(0deg, var(--night) 0%, transparent 30%); pointer-events: none; }
+.hero::after { content: ""; position: absolute; inset: 0; z-index: 1; background: linear-gradient(90deg, rgba(238,243,249,.82) 0%, rgba(238,243,249,.45) 42%, rgba(238,243,249,0) 68%), linear-gradient(180deg, transparent 84%, var(--night) 100%); pointer-events: none; }
+.hero h1 { color: var(--day-ink); }
+.hero .eyebrow { color: var(--ozone-deep); }
+.hero .lead { color: var(--day-soft); }
+.hero .btn-ghost { color: var(--day-ink); border-color: rgba(13,26,43,.3); background: rgba(255,255,255,.45); }
+.hero .btn-ghost:hover { border-color: var(--day-ink); background: rgba(255,255,255,.8); }
+.hero .btn-main { box-shadow: 0 12px 32px rgba(36,86,216,.28); }
 .hero-in { display: grid; gap: 26px; max-width: 760px; }
-.hero .lead em { font-style: normal; color: var(--ink); }
+.hero .lead em { font-style: normal; color: var(--day-ink); }
 .cta-row { display: flex; flex-wrap: wrap; gap: 12px; }
-.facts { display: flex; flex-wrap: wrap; gap: 10px 28px; margin-top: 10px; padding-top: 22px; border-top: 1px solid var(--line); }
+.facts { display: flex; flex-wrap: wrap; gap: 10px 28px; margin-top: 10px; padding-top: 22px; border-top: 1px solid rgba(13,26,43,.12); }
 .facts div { display: grid; gap: 2px; }
 .facts b { font: 600 15px/1.3 var(--f-display); }
-.facts span { color: var(--ink-soft); font-size: 15px; }
-.readout { font: 500 13px/1 var(--f-mono); color: var(--glow); display: flex; gap: 18px; flex-wrap: wrap; letter-spacing: .06em; }
-.readout span::before { content: ""; display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--glow); margin-right: 8px; vertical-align: middle; box-shadow: 0 0 10px var(--glow); }
-.kadr-tag { position: absolute; top: 90px; right: clamp(16px, 4vw, 40px); font: 500 12px/1.4 var(--f-mono); color: var(--ink-soft); max-width: 320px; text-align: right; }
+.facts span { color: var(--day-soft); font-size: 15px; }
+.readout { font: 500 13px/1 var(--f-mono); color: var(--ozone-deep); display: flex; gap: 18px; flex-wrap: wrap; letter-spacing: .06em; }
+.readout span::before { content: ""; display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--ozone); margin-right: 8px; vertical-align: middle; box-shadow: 0 0 10px var(--ozone); }
+.kadr-tag { position: absolute; z-index: 2; bottom: clamp(90px, 10vw, 150px); right: clamp(16px, 4vw, 40px); font: 500 12px/1.4 var(--f-mono); color: var(--day-soft); max-width: 320px; text-align: right; }
 .kadr-tag b { color: var(--pain); font-weight: 600; }
 
 /* ---------- день ---------- */
@@ -196,9 +207,8 @@ blockquote footer { font: 500 14px/1.4 var(--f-mono); color: var(--ink-soft); }
   .hour { grid-template-columns: 1fr; gap: 8px; }
   .contra { columns: 1; }
   .top .btn { display: none; }
-  .hero::after { background: linear-gradient(0deg, var(--night) 10%, rgba(7,9,12,.55) 60%, rgba(7,9,12,.2)); }
+  .hero::after { background: linear-gradient(180deg, rgba(238,243,249,.2) 0%, rgba(238,243,249,.75) 45%, rgba(238,243,249,.6) 85%, var(--night) 100%); }
   .pocket .big { min-height: 300px; }
-  .variants a { padding: 10px 10px; }
 }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
@@ -214,16 +224,11 @@ blockquote footer { font: 500 14px/1.4 var(--f-mono); color: var(--ink-soft); }
   </div>
 </header>
 
-<nav class="variants" aria-label="Варианты первого экрана для суда">
-  <a href="#a" data-v="a">A · Тепло</a>
-  <a href="#b" data-v="b">B · Импульс</a>
-  <a href="#c" data-v="c">C · Материя</a>
-</nav>
-
 <main class="page">
   <section class="hero" id="hero">
     <div class="hero-art"><canvas id="heroArt" aria-hidden="true"></canvas></div>
-    <p class="kadr-tag" id="kadrTag"><b>● КАДР 1</b> · видео-луп 5-7 с · мужчина выходит из машины после дороги, рука упирается в поясницу. Пока на его месте живой фон.</p>
+    <canvas id="heroMol" aria-hidden="true"></canvas>
+    <p class="kadr-tag" id="kadrTag"><b>● КАДР 1</b> · видео-луп 5-7 с · мужчина выходит из машины после дороги, рука упирается в поясницу. Место под видео - справа, поверх живого фона.</p>
     <div class="wrap">
       <div class="hero-in">
         <p class="eyebrow">Поясница · шея · суставы</p>
@@ -428,7 +433,7 @@ blockquote footer { font: 500 14px/1.4 var(--f-mono); color: var(--ink-soft); }
   const onScroll = () => {
     const max = document.documentElement.scrollHeight - innerHeight;
     scrollK = max > 0 ? clamp(scrollY / max, 0, 1) : 0;
-    document.getElementById('top').classList.toggle('solid', scrollY > 40);
+    document.getElementById('top').classList.toggle('solid', scrollY > innerHeight * .8);
   };
   addEventListener('scroll', onScroll, { passive: true }); onScroll();
 
@@ -453,7 +458,7 @@ void main(){
   vec3 hot=mix(warm,ember,fl);vec3 cold=mix(oz,gl,fl);
   col=mix(hot,cold,cool)*glow*(.55+.6*fl);
   col+=mix(vec3(.05,.02,.01),vec3(.01,.02,.05),cool)*fbm(q*3.+t*.02);
- } else {
+ } else if(mode<1.5){
   vec2 p=q*2.2;
   vec2 a=vec2(fbm(p+t*.03),fbm(p+vec2(5.2,1.3)-t*.025));
   vec2 b=vec2(fbm(p+3.*a+vec2(1.7,9.2)),fbm(p+3.*a+vec2(8.3,2.8)+t*.02));
@@ -464,6 +469,22 @@ void main(){
   col=vec3(.9,.92,.95)*smoothstep(.35,.85,v)*.55+spec*vec3(.9,.95,1.)*.9;
   col*=smoothstep(1.25,.15,length(q-vec2(.35,0.)));
   col=mix(col,col*gl*1.3,.25);
+ } else {
+  float tt=t*.07;
+  vec2 w=q+.32*vec2(fbm(q*1.3+tt),fbm(q*1.3-tt+3.1));
+  vec3 base=vec3(.935,.955,.98);
+  vec3 ice=vec3(.70,.81,1.),oz2=vec3(.42,.60,1.),peach=vec3(1.,.83,.74),mint=vec3(.83,.95,.98);
+  float b1=exp(-3.2*length(w-vec2(.55+.18*sin(tt*2.3),.12+.12*cos(tt*1.7))));
+  float b2=exp(-3.8*length(w-vec2(.25+.2*cos(tt*1.9),-.28+.1*sin(tt*2.7))));
+  float b3=exp(-4.2*length(w-vec2(.85+.1*sin(tt*1.3),-.3+.15*sin(tt*2.1))));
+  float b4=exp(-3.5*length(w-vec2(-.35+.15*sin(tt*1.1),.3+.1*cos(tt*1.6))));
+  col=base;
+  col=mix(col,ice,clamp(b1*1.1,0.,1.));
+  col=mix(col,oz2,clamp(b2*.75,0.,1.));
+  col=mix(col,peach,clamp(b3*.9,0.,1.));
+  col=mix(col,mint,clamp(b4*.8,0.,1.));
+  float silk=sin(9.*fbm(w*1.8+tt*.5)+t*.25);
+  col+=vec3(1.)*.035*silk;
  }
  col*=gain;
  col+=(h(gl_FragCoord.xy+t)-.5)*.035;
@@ -545,36 +566,80 @@ void main(){
     };
   }
 
+  // ---------- молекулы озона и волны импульса (светлая шапка) ----------
+  function makeOzone(canvas) {
+    const ctx = canvas.getContext('2d');
+    let mx = .5, my = .5;
+    addEventListener('pointermove', e => { mx = e.clientX / innerWidth; my = e.clientY / innerHeight; }, { passive: true });
+    const rnd = (a, b) => a + Math.random() * (b - a);
+    const xMin = () => innerWidth < 700 ? .05 : .54;
+    const mols = Array.from({ length: 16 }, () => ({ x: rnd(xMin(), 1), y: rnd(0, 1), z: rnd(.15, 1), rot: rnd(0, 6.28), vr: rnd(-.25, .25), ph: rnd(0, 6.28) }));
+    mols.sort((a, b) => a.z - b.z);
+    const rings = []; let lastRing = -9, lastT = 0;
+    function atom(x, y, r, a) {
+      const g = ctx.createRadialGradient(x - r * .35, y - r * .4, r * .1, x, y, r);
+      g.addColorStop(0, `rgba(255,255,255,${.95 * a})`);
+      g.addColorStop(.45, `rgba(186,208,255,${.7 * a})`);
+      g.addColorStop(1, `rgba(61,123,255,${.45 * a})`);
+      ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.fill();
+      ctx.strokeStyle = `rgba(255,255,255,${.7 * a})`; ctx.lineWidth = 1; ctx.stroke();
+    }
+    return {
+      draw(time) {
+        const dpr = Math.min(devicePixelRatio || 1, 2);
+        const W = canvas.clientWidth, H = canvas.clientHeight;
+        if (canvas.width !== Math.round(W * dpr)) { canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr); }
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H);
+        const dt = Math.min(.05, time - lastT); lastT = time;
+        const fx = W < 700 ? W * .7 : W * .72, fy = H * .46;
+        // волны импульса
+        if (!reduce && time - lastRing > 1.7) { rings.push(time); lastRing = time; }
+        if (reduce && !rings.length) rings.push(time - 1.2, time - 2.6);
+        while (rings.length && time - rings[0] > 5) rings.shift();
+        for (const t0 of rings) {
+          const a = (time - t0) / 5, rad = 30 + a * Math.max(W, H) * .6;
+          ctx.strokeStyle = `rgba(61,123,255,${(1 - a) * .32})`; ctx.lineWidth = 1.4;
+          ctx.beginPath(); ctx.arc(fx, fy, rad, 0, Math.PI * 2); ctx.stroke();
+        }
+        const core = ctx.createRadialGradient(fx, fy, 0, fx, fy, 90);
+        const beat = .55 + .45 * Math.pow(Math.max(0, Math.sin(time * 3.7)), 8);
+        core.addColorStop(0, `rgba(255,255,255,${.9 * beat})`); core.addColorStop(.3, `rgba(141,184,255,${.45 * beat})`); core.addColorStop(1, 'rgba(141,184,255,0)');
+        ctx.fillStyle = core; ctx.beginPath(); ctx.arc(fx, fy, 90, 0, Math.PI * 2); ctx.fill();
+        // молекулы O3: центральный атом и два под углом 117°
+        for (const m of mols) {
+          if (!reduce) { m.y -= dt * (.012 + m.z * .03); m.rot += dt * m.vr; }
+          if (m.y < -.12) { m.y = 1.12; m.x = rnd(xMin(), 1); }
+          const r = (W < 700 ? 5 : 7) + m.z * (W < 700 ? 12 : 20);
+          const x = m.x * W + Math.sin(time * .3 + m.ph) * 12 + (mx - .5) * m.z * -40;
+          const y = m.y * H + (my - .5) * m.z * -30;
+          const a = (.35 + m.z * .65) * (W < 700 ? .45 : 1), d = r * 1.55, half = 58.5 * Math.PI / 180;
+          const pts = [[0, 0], [Math.sin(half) * d, Math.cos(half) * d], [-Math.sin(half) * d, Math.cos(half) * d]]
+            .map(([px, py]) => [x + px * Math.cos(m.rot) - py * Math.sin(m.rot), y + px * Math.sin(m.rot) + py * Math.cos(m.rot)]);
+          ctx.strokeStyle = `rgba(61,123,255,${.3 * a})`; ctx.lineWidth = Math.max(1, r * .22);
+          ctx.beginPath(); ctx.moveTo(...pts[1]); ctx.lineTo(...pts[0]); ctx.lineTo(...pts[2]); ctx.stroke();
+          atom(pts[1][0], pts[1][1], r * .82, a); atom(pts[2][0], pts[2][1], r * .82, a); atom(pts[0][0], pts[0][1], r, a);
+        }
+      }
+    };
+  }
+
   // ---------- сборка ----------
-  let variant = 'b';
   const bg = makeGL(document.getElementById('bg'), {
-    scale: .35, cool: () => scrollK, mode: () => 0,
-    gain: () => { const inHero = scrollY < innerHeight * .7; return inHero ? (variant === 'b' ? .12 : .25) : .3; },
+    scale: .35, cool: () => scrollK, mode: () => 0, gain: () => .3,
     focus: () => [.78, .35 - scrollK * .1]
   });
-  let heroCanvasRef = document.getElementById('heroArt');
-  let heroGL = null, heroSpine = null;
+  const heroCanvasRef = document.getElementById('heroArt');
+  const heroGL = makeGL(heroCanvasRef, { scale: .5, cool: () => 0, mode: () => 2, gain: () => 1, focus: () => [.7, .45] });
+  const molCanvas = document.getElementById('heroMol');
+  const heroMol = makeOzone(molCanvas);
   const finalSpine = makeSpine(document.getElementById('finalArt'), true);
   const howCanvas = document.getElementById('howArt');
   const howGL = makeGL(howCanvas, { scale: .4, cool: () => 1, mode: () => 1, gain: () => .8, focus: () => [.5, .5] });
 
-  function setVariant(v) {
-    variant = ['a', 'b', 'c'].includes(v) ? v : 'b';
-    document.querySelectorAll('.variants a').forEach(a => a.setAttribute('aria-current', a.dataset.v === variant));
-    const fresh = heroCanvasRef.cloneNode(); heroCanvasRef.replaceWith(fresh);
-    if (variant === 'b') { heroSpine = makeSpine(fresh, false); heroGL = null; }
-    else { heroSpine = null; heroGL = makeGL(fresh, { scale: .5, cool: () => 0, mode: () => variant === 'c' ? 1 : 0, gain: () => variant === 'c' ? 1.1 : 1.25, focus: () => [.72, .45] }); }
-    heroCanvasRef = fresh;
-    if (reduce) frame(8);
-  }
-  const hash = () => (location.hash || '').replace('#', '');
-  addEventListener('hashchange', () => { const h = hash(); if (['a','b','c'].includes(h)) { setVariant(h); window.scrollTo(0, 0); } });
-  setVariant(['a','b','c'].includes(hash()) ? hash() : 'b');
-
   const vis = el => { const r = el.getBoundingClientRect(); return r.bottom > 0 && r.top < innerHeight; };
   function frame(t) {
     if (bg) bg.draw(t);
-    if (vis(heroCanvasRef)) { heroGL && heroGL.draw(t); heroSpine && heroSpine.draw(t); }
+    if (vis(heroCanvasRef)) { heroGL && heroGL.draw(t); heroMol.draw(t); }
     const fc = document.getElementById('finalArt'); if (vis(fc)) finalSpine.draw(t);
     if (howGL && vis(howCanvas)) howGL.draw(t);
   }
